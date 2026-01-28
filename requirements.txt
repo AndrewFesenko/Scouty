@@ -1,0 +1,15 @@
+# Scouty Robot - Combined Requirements
+# Install all dependencies with: pip install -r requirements.txt
+
+# Vision dependencies
+opencv-python>=4.5.0
+mediapipe>=0.8.0
+numpy>=1.19.0
+
+# Communication dependencies
+pyserial>=3.5
+
+# Testing dependencies (optional)
+pytest>=7.0.0
+pytest-cov>=3.0.0
+pytest-mock>=3.6.0
