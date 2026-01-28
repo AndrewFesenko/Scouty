@@ -29,12 +29,12 @@ void motor_set_velocity(int16_t left_vel, int16_t right_vel) {
     // Motor A (left)
     if (left_vel > 0) {
         digitalWrite(MOTOR_A_DIR, HIGH);
-        int pwm = constrain(left_vel, 0, MAX_PWM_VALUE);
+        int pwm = constrain(abs(left_vel), 0, MAX_PWM_VALUE);
         if (pwm < MOTOR_DEADBAND) pwm = 0;
         analogWrite(MOTOR_A_PWM, pwm);
     } else if (left_vel < 0) {
         digitalWrite(MOTOR_A_DIR, LOW);
-        int pwm = constrain(-left_vel, 0, MAX_PWM_VALUE);
+        int pwm = constrain(abs(left_vel), 0, MAX_PWM_VALUE);
         if (pwm < MOTOR_DEADBAND) pwm = 0;
         analogWrite(MOTOR_A_PWM, pwm);
     } else {
@@ -44,12 +44,12 @@ void motor_set_velocity(int16_t left_vel, int16_t right_vel) {
     // Motor B (right)
     if (right_vel > 0) {
         digitalWrite(MOTOR_B_DIR, HIGH);
-        int pwm = constrain(right_vel, 0, MAX_PWM_VALUE);
+        int pwm = constrain(abs(right_vel), 0, MAX_PWM_VALUE);
         if (pwm < MOTOR_DEADBAND) pwm = 0;
         analogWrite(MOTOR_B_PWM, pwm);
     } else if (right_vel < 0) {
         digitalWrite(MOTOR_B_DIR, LOW);
-        int pwm = constrain(-right_vel, 0, MAX_PWM_VALUE);
+        int pwm = constrain(abs(right_vel), 0, MAX_PWM_VALUE);
         if (pwm < MOTOR_DEADBAND) pwm = 0;
         analogWrite(MOTOR_B_PWM, pwm);
     } else {

@@ -83,7 +83,9 @@ class PersonTracker:
             shoulder_width = abs(left_shoulder.x - right_shoulder.x) * w
             
             # Simple inverse relationship for distance estimation
-            if shoulder_width > 0:
+            # Calibration constant (100.0) represents normalized shoulder width at reference distance
+            # Larger shoulder width in pixels = person is closer
+            if shoulder_width > 10:  # Minimum threshold to avoid division issues
                 # Normalized distance (larger width = closer)
                 tracking_info['distance_estimate'] = 100.0 / shoulder_width
             

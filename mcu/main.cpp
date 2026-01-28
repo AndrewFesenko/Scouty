@@ -139,6 +139,6 @@ void send_status() {
 
 void estop_isr() {
     // Emergency stop interrupt handler
+    // Only set flag here, actual motor stop happens in main loop
     emergency_stop = true;
-    motor_stop_all();
 }

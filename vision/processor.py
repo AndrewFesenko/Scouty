@@ -91,8 +91,17 @@ class ImageProcessor:
             
         Returns:
             Cropped frame
+            
+        Raises:
+            ValueError: If crop dimensions exceed frame dimensions
         """
         h, w = frame.shape[:2]
+        
+        # Validate crop dimensions
+        if crop_width > w or crop_height > h:
+            raise ValueError(f"Crop dimensions ({crop_width}x{crop_height}) "
+                           f"exceed frame dimensions ({w}x{h})")
+        
         start_x = (w - crop_width) // 2
         start_y = (h - crop_height) // 2
         

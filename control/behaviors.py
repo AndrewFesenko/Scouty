@@ -41,10 +41,20 @@ class FollowBehavior(Behavior):
     Follow behavior - track and follow detected person.
     """
     
-    def __init__(self):
-        """Initialize follow behavior."""
+    # Control parameters
+    ANGULAR_GAIN = 0.01  # Proportional gain for angular velocity control
+    LINEAR_VELOCITY = 0.3  # Forward velocity when centered (m/s)
+    
+    def __init__(self, frame_width: int = 640):
+        """
+        Initialize follow behavior.
+        
+        Args:
+            frame_width: Camera frame width in pixels (default 640)
+        """
         super().__init__()
         self.center_tolerance = 50  # pixels from center
+        self.frame_center_x = frame_width // 2
         
     def execute(self) -> Dict[str, Any]:
         """
@@ -69,18 +79,17 @@ class FollowBehavior(Behavior):
             distance = self.data.get('distance_estimate')
             
             if center:
-                # Assume frame center at 320 (for 640px width)
-                frame_center_x = 320
-                error = center[0] - frame_center_x
+                # Calculate error from center
+                error = center[0] - self.frame_center_x
                 
-                # Calculate angular velocity based on error
+                # Calculate angular velocity based on error (proportional control)
                 if abs(error) > self.center_tolerance:
                     # Turn to center target
-                    result['angular_velocity'] = -error * 0.01  # Simple P control
+                    result['angular_velocity'] = -error * self.ANGULAR_GAIN
                 
                 # Move forward if target is centered
                 if abs(error) < self.center_tolerance:
-                    result['linear_velocity'] = 0.3  # m/s
+                    result['linear_velocity'] = self.LINEAR_VELOCITY
                 
                 result['distance_estimate'] = distance
         
@@ -123,11 +132,20 @@ class ApproachBehavior(Behavior):
     Approach behavior - carefully move closer to target.
     """
     
-    def __init__(self):
-        """Initialize approach behavior."""
+    # Control parameters
+    ANGULAR_GAIN = 0.005  # Gentler proportional gain for approach
+    
+    def __init__(self, frame_width: int = 640):
+        """
+        Initialize approach behavior.
+        
+        Args:
+            frame_width: Camera frame width in pixels (default 640)
+        """
         super().__init__()
         self.approach_velocity = 0.1  # Slower velocity for approach
         self.stop_distance = 0.5  # Stop when very close
+        self.frame_center_x = frame_width // 2
         
     def execute(self) -> Dict[str, Any]:
         """
@@ -152,9 +170,8 @@ class ApproachBehavior(Behavior):
             # Keep target centered
             center = self.data.get('center')
             if center:
-                frame_center_x = 320
-                error = center[0] - frame_center_x
-                result['angular_velocity'] = -error * 0.005  # Gentle correction
+                error = center[0] - self.frame_center_x
+                result['angular_velocity'] = -error * self.ANGULAR_GAIN  # Gentle correction
         
         return result
 
